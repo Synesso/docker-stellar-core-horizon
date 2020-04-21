@@ -1,16 +1,20 @@
-name: Docker Image CI
+name: Publish Docker
 
 on:
   push:
     tags: v*
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile.testing --tag quickstart:${GITHUB_REF##*/}
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: synesso/stellar
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile.testing
+        tags: "latest,${GITHUB_REF##*/}"
+
